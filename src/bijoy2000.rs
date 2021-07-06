@@ -426,16 +426,21 @@ fn is_front_kar(c: char) -> bool {
     matches!(c, B_I_KAR | B_E_KAR | B_OI_KAR)
 }
 
+/// Returns a substring that contains the `n` rightmost Bengali characters of the `string`.
+fn last(string: &str, n: usize) -> Option<&str> {
+    string.get(string.len() - n * 3..)
+}
+
 fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
     match (kar, pos) {
         ('া', _) => 'v',
         ('ী', _) => 'x',
         // U Kar
         ('ু', _) if preceding == "র" => '“', // রু
-        ('ু', _) => match preceding.get(preceding.len() - 3..) {
+        ('ু', _) => match last(preceding, 1) {
             Some("র") => {
                 if matches!(
-                    preceding.get(preceding.len() - 9..),
+                    last(preceding, 3),
                     Some("শ্র")
                         | Some("দ্র")
                         | Some("গ্র")
@@ -449,7 +454,7 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
                         | Some("ম্র")
                         | Some("স্র")
                 ) || matches!(
-                    preceding.get(preceding.len() - 15..),
+                    last(preceding, 5),
                     Some("ন্দ্র") | Some("ম্প্র") | Some("ষ্প্র") | Some("স্প্র")
                 ) {
                     '“'
@@ -459,9 +464,9 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
             }
             Some("ল") => {
                 if matches!(
-                    preceding.get(preceding.len() - 9..),
+                    last(preceding, 3),
                     Some("গ্ল") | Some("প্ল") | Some("ব্ল") | Some("শ্ল") | Some("স্ল")
-                ) || matches!(preceding.get(preceding.len() - 15..), Some("স্প্ল"))
+                ) || matches!(last(preceding, 5), Some("স্প্ল"))
                 {
                     '“'
                 } else {
@@ -469,7 +474,7 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
                 }
             }
             Some("ণ") => {
-                if matches!(preceding.get(preceding.len() - 9..), Some("ষ্ণ")) {
+                if matches!(last(preceding, 3), Some("ষ্ণ")) {
                     'z'
                 } else {
                     'y'
