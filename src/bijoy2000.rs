@@ -1,6 +1,7 @@
 use std::{collections::HashMap, ops::Deref};
 
 use maplit::hashmap;
+use matches::matches;
 
 use crate::chars::*;
 
@@ -402,7 +403,7 @@ impl Bijoy2000 {
                     }
                     temp.clear();
                     temp.push(c);
-                }        
+                }
             } else {
                 if !temp.is_empty() {
                     if let Some(replace) = self.map.get(temp.deref()) {
@@ -417,11 +418,11 @@ impl Bijoy2000 {
     }
 }
 
-const fn is_kar(c: char) -> bool {
+fn is_kar(c: char) -> bool {
     matches!(c, B_AA_KAR..=B_OU_KAR)
 }
 
-const fn is_front_kar(c:char) -> bool {
+fn is_front_kar(c: char) -> bool {
     matches!(c, B_I_KAR | B_E_KAR | B_OI_KAR)
 }
 
@@ -429,30 +430,85 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
     match (kar, pos) {
         ('া', _) => 'v',
         ('ী', _) => 'x',
+        // U Kar
         ('ু', _) if preceding == "র" => '“', // রু
-        ('ু', _) => 'z',
+        ('ু', _) => match preceding.get(preceding.len() - 3..) {
+            Some("র") => {
+                if matches!(
+                    preceding.get(preceding.len() - 9..),
+                    Some("শ্র")
+                        | Some("দ্র")
+                        | Some("গ্র")
+                        | Some("ত্র")
+                        | Some("জ্র")
+                        | Some("থ্র")
+                        | Some("ধ্র")
+                        | Some("প্র")
+                        | Some("ব্র")
+                        | Some("ভ্র")
+                        | Some("ম্র")
+                        | Some("স্র")
+                ) || matches!(
+                    preceding.get(preceding.len() - 15..),
+                    Some("ন্দ্র") | Some("ম্প্র") | Some("ষ্প্র") | Some("স্প্র")
+                ) {
+                    '“'
+                } else {
+                    'y'
+                }
+            }
+            Some("ল") => {
+                if matches!(
+                    preceding.get(preceding.len() - 9..),
+                    Some("গ্ল") | Some("প্ল") | Some("ব্ল") | Some("শ্ল") | Some("স্ল")
+                ) || matches!(preceding.get(preceding.len() - 15..), Some("স্প্ল"))
+                {
+                    '“'
+                } else {
+                    'y'
+                }
+            }
+            Some("ণ") => {
+                if matches!(preceding.get(preceding.len() - 9..), Some("ষ্ণ")) {
+                    'z'
+                } else {
+                    'y'
+                }
+            }
+            Some("খ") | Some("গ") | Some("ঘ") | Some("ন") | Some("থ") | Some("দ") | Some("ধ")
+            | Some("প") | Some("ব") | Some("ম") | Some("য") | Some("শ") | Some("ষ") | Some("স")
+            | Some("হ") | Some("য়") => 'y',
+            Some("ড়") | Some("ঢ়") => '–',
+            _ => 'z',
+        },
+        // UU Kar
         ('ূ', _) if preceding == "র" => 'ƒ', // রূ
         ('ূ', _) => '‚',
+        // RRI Kar
         ('ৃ', _) => '…',
         ('ি', _) => 'w',
         ('ে', 1) => '†', // Front facing
         ('ে', _) => '‡',
         ('ৈ', 1) => 'ˆ', // Front facing
         ('ৈ', _) => '‰',
-        _ => panic!("Unknown Kar replacement combination!")
+        _ => panic!("Unknown Kar replacement combination!"),
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn test_without_juktakkhor() {
         let converter = Bijoy2000::new();
-        
+
         assert_eq!(converter.convert("কতল"), "KZj");
-        assert_eq!(converter.convert("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"), "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh");
+        assert_eq!(
+            converter.convert("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"),
+            "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
+        );
         assert_eq!(converter.convert("০১২৩৪৫৬৭৮৯"), "0123456789");
     }
 
@@ -483,6 +539,6 @@ mod tests {
         assert_eq!(converter.convert("পক্ব"), "cK¡");
         assert_eq!(converter.convert("সংখ্যা"), "msL¨v");
         assert_eq!(converter.convert("উৎস"), "Drm");
-        //TODO assert_eq!(converter.convert("বিদ্যুৎ"), "we`¨yr");
+        assert_eq!(converter.convert("বিদ্যুৎ"), "we`¨yr");
     }
 }
