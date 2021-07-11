@@ -363,75 +363,74 @@ impl Bijoy2000 {
 
         loop {
             if let Some((pos, c)) = iter.next() {
-                if is_kar(c) {
-                    match c {
-                        B_O_KAR => {
-                            output.push(replace_kar('ে', pos, ""));
-                            if let Some(replace) = self.map.get(temp.deref()) {
-                                output.push_str(replace);
-                            }
-                            temp.clear();
-                            output.push('v');
+                match c {
+                    B_O_KAR => {
+                        output.push(replace_kar('ে', pos, ""));
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
                         }
-                        B_OU_KAR => {
-                            output.push(replace_kar('ে', pos, ""));
-                            if let Some(replace) = self.map.get(temp.deref()) {
-                                output.push_str(replace);
-                            }
-                            temp.clear();
-                            output.push('Š');
-                        }
-                        c if is_front_kar(c) => {
-                            output.push(replace_kar(c, pos, ""));
-                            if let Some(replace) = self.map.get(temp.deref()) {
-                                output.push_str(replace);
-                            }
-                            temp.clear();
-                        }
-                        B_U_KAR if temp == "গ" => {
-                            output.push('¸');
-                            temp.clear();
-                        }
-                        B_U_KAR if temp == "শ" => {
-                            output.push('ï');
-                            temp.clear();
-                        }
-                        B_U_KAR if temp == "হ" => {
-                            output.push('û');
-                            temp.clear();
-                        }
-                        B_U_KAR if temp.ends_with("্ত") => {
-                            if let Some(replace) = self.map.get(temp.deref()) {
-                                output.push_str(replace);
-                                output.pop(); // Pop '—'
-                            }
-                            output.push('‘');
-                            temp.clear();
-                        }
-                        B_RRI_KAR if temp == "হ" => {
-                            output.push('ü');
-                            temp.clear();
-                        }
-                        _ => {
-                            let kar = replace_kar(c, pos, &temp);
-                            if let Some(replace) = self.map.get(temp.deref()) {
-                                output.push_str(replace);
-                            }
-                            temp.clear();
-                            output.push(kar);
-                        }
+                        temp.clear();
+                        output.push('v');
                     }
-                } else if c == B_HASANTA {
-                    encountered_hasanta = true;
-                    temp.push(B_HASANTA);
-                } else if encountered_hasanta {
-                    temp.push(c);
-                } else if !encountered_hasanta {
-                    if let Some(replace) = self.map.get(temp.deref()) {
-                        output.push_str(replace);
+                    B_OU_KAR => {
+                        output.push(replace_kar('ে', pos, ""));
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
+                        }
+                        temp.clear();
+                        output.push('Š');
                     }
-                    temp.clear();
-                    temp.push(c);
+                    c if is_front_kar(c) => {
+                        output.push(replace_kar(c, pos, ""));
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
+                        }
+                        temp.clear();
+                    }
+                    B_U_KAR if temp == "গ" => {
+                        output.push('¸');
+                        temp.clear();
+                    }
+                    B_U_KAR if temp == "শ" => {
+                        output.push('ï');
+                        temp.clear();
+                    }
+                    B_U_KAR if temp == "হ" => {
+                        output.push('û');
+                        temp.clear();
+                    }
+                    B_U_KAR if temp.ends_with("্ত") => {
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
+                            output.pop(); // Pop '—'
+                        }
+                        output.push('‘');
+                        temp.clear();
+                    }
+                    B_RRI_KAR if temp == "হ" => {
+                        output.push('ü');
+                        temp.clear();
+                    }
+                    c if is_kar(c) => {
+                        let kar = replace_kar(c, pos, &temp);
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
+                        }
+                        temp.clear();
+                        output.push(kar);
+                    }
+                    B_HASANTA => {
+                        encountered_hasanta = true;
+                        temp.push(B_HASANTA);
+                    }
+                    c if encountered_hasanta => temp.push(c),
+                    c => {
+                        if let Some(replace) = self.map.get(temp.deref()) {
+                            output.push_str(replace);
+                        }
+                        temp.clear();
+                        temp.push(c);
+                    }
                 }
             } else {
                 if !temp.is_empty() {
@@ -455,27 +454,12 @@ fn is_front_kar(c: char) -> bool {
     matches!(c, B_I_KAR | B_E_KAR | B_OI_KAR)
 }
 
+#[rustfmt::skip]
 fn is_base_line_right_char(c: &str) -> bool {
     matches!(
         c,
-        "খ" | "গ"
-            | "ঘ"
-            | "ন"
-            | "ণ"
-            | "থ"
-            | "দ"
-            | "ধ"
-            | "প"
-            | "ব"
-            | "ম"
-            | "য"
-            | "র"
-            | "ল"
-            | "শ"
-            | "ষ"
-            | "স"
-            | "হ"
-            | "য়"
+        "খ" | "গ" | "ঘ" | "ন" | "ণ" | "থ" | "দ" | "ধ" | "প" | "ব" |
+        "ম" | "য" | "র" | "ল" | "শ" | "ষ" | "স" | "হ" | "য়"
     )
 }
 
@@ -492,34 +476,17 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
         ('ু', _) if preceding == "র" => '“', // রু
         ('ু', _) => match last(preceding, 1) {
             Some("র") => {
-                if matches!(
-                    last(preceding, 3),
-                    Some("শ্র")
-                        | Some("দ্র")
-                        | Some("গ্র")
-                        | Some("ত্র")
-                        | Some("জ্র")
-                        | Some("থ্র")
-                        | Some("ধ্র")
-                        | Some("প্র")
-                        | Some("ব্র")
-                        | Some("ভ্র")
-                        | Some("ম্র")
-                        | Some("স্র")
-                ) || matches!(
-                    last(preceding, 5),
-                    Some("ন্দ্র") | Some("ম্প্র") | Some("ষ্প্র") | Some("স্প্র")
-                ) {
+                if is_special_combination_with_r_fola(last(preceding, 3))
+                    || is_special_combination_with_r_fola(last(preceding, 5))
+                {
                     '“'
                 } else {
                     'y'
                 }
             }
             Some("ল") => {
-                if matches!(
-                    last(preceding, 3),
-                    Some("গ্ল") | Some("প্ল") | Some("ব্ল") | Some("শ্ল") | Some("স্ল")
-                ) || matches!(last(preceding, 5), Some("স্প্ল"))
+                if is_special_combination_with_l(last(preceding, 3))
+                    || matches!(last(preceding, 5), Some("স্প্ল"))
                 {
                     '“'
                 } else {
@@ -541,34 +508,17 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
         ('ূ', _) if preceding == "র" => 'ƒ', // রূ
         ('ূ', _) => match last(preceding, 1) {
             Some("র") => {
-                if matches!(
-                    last(preceding, 3),
-                    Some("শ্র")
-                        | Some("দ্র")
-                        | Some("গ্র")
-                        | Some("ত্র")
-                        | Some("জ্র")
-                        | Some("থ্র")
-                        | Some("ধ্র")
-                        | Some("প্র")
-                        | Some("ব্র")
-                        | Some("ভ্র")
-                        | Some("ম্র")
-                        | Some("স্র")
-                ) || matches!(
-                    last(preceding, 5),
-                    Some("ন্দ্র") | Some("ম্প্র") | Some("ষ্প্র") | Some("স্প্র")
-                ) {
+                if is_special_combination_with_r_fola(last(preceding, 3))
+                    || is_special_combination_with_r_fola(last(preceding, 5))
+                {
                     'ƒ'
                 } else {
                     '~'
                 }
             }
             Some("ল") => {
-                if matches!(
-                    last(preceding, 3),
-                    Some("গ্ল") | Some("প্ল") | Some("ব্ল") | Some("শ্ল") | Some("স্ল")
-                ) || matches!(last(preceding, 5), Some("স্প্ল"))
+                if is_special_combination_with_l(last(preceding, 3))
+                    || matches!(last(preceding, 5), Some("স্প্ল"))
                 {
                     'ƒ'
                 } else {
@@ -592,6 +542,25 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
     }
 }
 
+#[rustfmt::skip]
+fn is_special_combination_with_r_fola(string: Option<&str>) -> bool {
+    matches!(
+        string,
+        // Two character combination (excluding Hasanta).
+        Some("শ্র") | Some("দ্র") | Some("গ্র") | Some("ত্র") | Some("জ্র") | Some("থ্র") |
+        Some("ধ্র") | Some("প্র") | Some("ব্র") | Some("ভ্র") | Some("ম্র") | Some("স্র") |
+        // Three character combination (excluding Hasanta).
+        Some("ন্দ্র") | Some("ম্প্র") | Some("ষ্প্র") | Some("স্প্র")
+    )
+}
+
+fn is_special_combination_with_l(string: Option<&str>) -> bool {
+    matches!(
+        string,
+        Some("গ্ল") | Some("প্ল") | Some("ব্ল") | Some("শ্ল") | Some("স্ল")
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -607,6 +576,7 @@ mod tests {
             "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
         );
         assert_eq!(converter.convert("০১২৩৪৫৬৭৮৯"), "0123456789");
+        //assert_eq!(converter.convert("বাংলা আমার ভাষা। আমি বাংলায় দেখি স্বপ্ন!"), "evsjv Avgvi fvlv| Avwg evsjvq †`wL ¯^cœ!");
     }
 
     #[test]
@@ -655,5 +625,13 @@ mod tests {
         assert_eq!(converter.convert("বিদ্যুৎ"), "we`¨yr");
         assert_eq!(converter.convert("কিন্তু"), "wKš‘");
         assert_eq!(converter.convert("আগন্তুক"), "AvMš‘K");
+        //assert_eq!(converter.convert("র‍্যাব"), "i¨ve");
+    }
+
+    #[test]
+    fn test_reph() {
+        let converter = Bijoy2000::new();
+
+        assert_eq!(converter.convert("অর্ক"), "AK©");
     }
 }
