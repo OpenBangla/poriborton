@@ -23,6 +23,7 @@ impl Bijoy2000 {
             "৮" => "8",
             "৯" => "9",
             "ৎ" => "r",
+            "ঁ" => "u",
             "ং" => "s",
             "ঃ" => "t",
             "অ" => "A",
@@ -356,93 +357,96 @@ impl Bijoy2000 {
 
     pub fn convert(&self, input: &str) -> String {
         let mut output = String::new();
-        let mut temp = String::new();
+        let mut buffer = String::new();
         let mut encountered_hasanta = false;
 
         let mut iter = input.chars().enumerate();
 
-        loop {
-            if let Some((pos, c)) = iter.next() {
-                match c {
-                    B_O_KAR => {
-                        output.push(replace_kar('ে', pos, ""));
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                        }
-                        temp.clear();
-                        output.push('v');
-                    }
-                    B_OU_KAR => {
-                        output.push(replace_kar('ে', pos, ""));
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                        }
-                        temp.clear();
-                        output.push('Š');
-                    }
-                    c if is_front_kar(c) => {
-                        output.push(replace_kar(c, pos, ""));
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                        }
-                        temp.clear();
-                    }
-                    B_U_KAR if temp == "গ" => {
-                        output.push('¸');
-                        temp.clear();
-                    }
-                    B_U_KAR if temp == "শ" => {
-                        output.push('ï');
-                        temp.clear();
-                    }
-                    B_U_KAR if temp == "হ" => {
-                        output.push('û');
-                        temp.clear();
-                    }
-                    B_U_KAR if temp.ends_with("্ত") => {
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                            output.pop(); // Pop '—'
-                        }
-                        output.push('‘');
-                        temp.clear();
-                    }
-                    B_RRI_KAR if temp == "হ" => {
-                        output.push('ü');
-                        temp.clear();
-                    }
-                    c if is_kar(c) => {
-                        let kar = replace_kar(c, pos, &temp);
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                        }
-                        temp.clear();
-                        output.push(kar);
-                    }
-                    B_HASANTA => {
-                        encountered_hasanta = true;
-                        temp.push(B_HASANTA);
-                    }
-                    c if encountered_hasanta => temp.push(c),
-                    c => {
-                        if let Some(replace) = self.map.get(temp.deref()) {
-                            output.push_str(replace);
-                        }
-                        temp.clear();
-                        temp.push(c);
-                    }
+        while let Some((pos, c)) = iter.next() {
+            match c {
+                B_O_KAR => {
+                    output.push(replace_kar('ে', pos, ""));
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push('v');
                 }
-            } else {
-                if !temp.is_empty() {
-                    if let Some(replace) = self.map.get(temp.deref()) {
-                        output.push_str(replace);
-                    }
+                B_OU_KAR => {
+                    output.push(replace_kar('ে', pos, ""));
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push('Š');
                 }
-                break;
+                c if is_front_kar(c) => {
+                    output.push(replace_kar(c, pos, ""));
+                    self.convert_buffer(&mut buffer, &mut output);
+                }
+                B_U_KAR if buffer == "গ" => {
+                    output.push('¸');
+                    buffer.clear();
+                }
+                B_U_KAR if buffer == "শ" => {
+                    output.push('ï');
+                    buffer.clear();
+                }
+                B_U_KAR if buffer == "হ" => {
+                    output.push('û');
+                    buffer.clear();
+                }
+                B_U_KAR if buffer.ends_with("্ত") => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.pop(); // Pop '—'
+                    output.push('‘');
+                }
+                B_RRI_KAR if buffer == "হ" => {
+                    output.push('ü');
+                    buffer.clear();
+                }
+                c if is_kar(c) => {
+                    let kar = replace_kar(c, pos, &buffer);
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push(kar);
+                }
+                B_HASANTA => {
+                    encountered_hasanta = true;
+                    buffer.push(B_HASANTA);
+                }
+                B_CRTAKA => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push('$');
+                }
+                B_DARI => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push('|');
+                }
+                B_DDARI => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push('\\');
+                }
+                c if encountered_hasanta => {
+                    buffer.push(c);
+                    encountered_hasanta = false;
+                }
+                c => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    buffer.push(c);
+                }
+            }
+        }
+        
+        if !buffer.is_empty() {
+            if let Some(replace) = self.map.get(buffer.deref()) {
+                output.push_str(replace);
             }
         }
 
         output
+    }
+
+    /// Converts the `buffer` into Bijoy encoding and updates the `output`.
+    /// Clears the `buffer` after the conversion.
+    fn convert_buffer(&self, buffer: &mut String, output: &mut String) {
+        if let Some(replace) = self.map.get(buffer.as_str()) {
+            output.push_str(replace);
+        }
+        buffer.clear();
     }
 }
 
@@ -571,6 +575,9 @@ mod tests {
         let converter = Bijoy2000::new();
 
         assert_eq!(converter.convert("কতল"), "KZj");
+        assert_eq!(converter.convert("সুতরাং"), "myZivs");
+        assert_eq!(converter.convert("চাঁদ"), "Pvu`");
+        assert_eq!(converter.convert("দুঃখ"), "`ytL");
         assert_eq!(
             converter.convert("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"),
             "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
