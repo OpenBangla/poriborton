@@ -26,6 +26,7 @@ impl Bijoy2000 {
             "ঁ" => "u",
             "ং" => "s",
             "ঃ" => "t",
+            "৳" => "$",
             "অ" => "A",
             "আ" => "Av",
             "ই" => "B",
@@ -360,22 +361,20 @@ impl Bijoy2000 {
         let mut buffer = String::new();
         let mut encountered_hasanta = false;
 
-        let mut iter = input.chars().enumerate();
-
-        while let Some((pos, c)) = iter.next() {
+        for (pos, c) in input.char_indices() {
             match c {
                 B_O_KAR => {
-                    output.push(replace_kar('ে', pos, ""));
+                    output.push(replace_kar('ে', is_front_facing(&input[..pos]), ""));
                     self.convert_buffer(&mut buffer, &mut output);
                     output.push('v');
                 }
                 B_OU_KAR => {
-                    output.push(replace_kar('ে', pos, ""));
+                    output.push(replace_kar('ে', is_front_facing(&input[..pos]), ""));
                     self.convert_buffer(&mut buffer, &mut output);
                     output.push('Š');
                 }
                 c if is_front_kar(c) => {
-                    output.push(replace_kar(c, pos, ""));
+                    output.push(replace_kar(c, is_front_facing(&input[..pos]), ""));
                     self.convert_buffer(&mut buffer, &mut output);
                 }
                 B_U_KAR if buffer == "গ" => {
@@ -400,17 +399,13 @@ impl Bijoy2000 {
                     buffer.clear();
                 }
                 c if is_kar(c) => {
-                    let kar = replace_kar(c, pos, &buffer);
+                    let kar = replace_kar(c, false, &buffer);
                     self.convert_buffer(&mut buffer, &mut output);
                     output.push(kar);
                 }
                 B_HASANTA => {
                     encountered_hasanta = true;
                     buffer.push(B_HASANTA);
-                }
-                B_CRTAKA => {
-                    self.convert_buffer(&mut buffer, &mut output);
-                    output.push('$');
                 }
                 B_DARI => {
                     self.convert_buffer(&mut buffer, &mut output);
@@ -424,13 +419,17 @@ impl Bijoy2000 {
                     buffer.push(c);
                     encountered_hasanta = false;
                 }
-                c => {
+                c @ '\u{0980}'..='\u{09FF}' => {
                     self.convert_buffer(&mut buffer, &mut output);
                     buffer.push(c);
                 }
+                c => {
+                    self.convert_buffer(&mut buffer, &mut output);
+                    output.push(c);
+                }
             }
         }
-        
+
         if !buffer.is_empty() {
             if let Some(replace) = self.map.get(buffer.deref()) {
                 output.push_str(replace);
@@ -472,8 +471,8 @@ fn last(string: &str, n: usize) -> Option<&str> {
     string.get(string.len().saturating_sub(n * 3)..)
 }
 
-fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
-    match (kar, pos) {
+fn replace_kar(kar: char, front: bool, preceding: &str) -> char {
+    match (kar, front) {
         ('া', _) => 'v',
         ('ী', _) => 'x',
         // U Kar
@@ -538,9 +537,9 @@ fn replace_kar(kar: char, pos: usize, preceding: &str) -> char {
             _ => '…',
         },
         ('ি', _) => 'w',
-        ('ে', 1) => '†', // Front facing
+        ('ে', true) => '†', // Front facing
         ('ে', _) => '‡',
-        ('ৈ', 1) => 'ˆ', // Front facing
+        ('ৈ', true) => 'ˆ', // Front facing
         ('ৈ', _) => '‰',
         _ => panic!("Unknown Kar replacement combination!"),
     }
@@ -565,6 +564,44 @@ fn is_special_combination_with_l(string: Option<&str>) -> bool {
     )
 }
 
+fn is_consonant(c: char) -> bool {
+    matches!(c, B_K..=B_H)
+}
+
+fn is_front_facing(string: &str) -> bool {
+    // If it's an empty string, return true.
+    if string.is_empty() {
+        true;
+    }
+
+    // Check if it has a preceding Juktakkhor combination or single consonant.
+    let mut encountered_hasanta = false;
+    let mut encountered_consonant = false;
+
+    for c in string.chars().rev() {
+        if c == B_HASANTA {
+            encountered_hasanta = true;
+            continue;
+        }
+
+        if is_consonant(c) && encountered_consonant && !encountered_hasanta {
+            return false;
+        }
+
+        if is_consonant(c) {
+            encountered_consonant = true;
+            encountered_hasanta = false;
+            continue;
+        }
+
+        if c.is_ascii_whitespace() {
+            break;
+        }
+    }
+
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -582,8 +619,11 @@ mod tests {
             converter.convert("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"),
             "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
         );
-        assert_eq!(converter.convert("০১২৩৪৫৬৭৮৯"), "0123456789");
-        //assert_eq!(converter.convert("বাংলা আমার ভাষা। আমি বাংলায় দেখি স্বপ্ন!"), "evsjv Avgvi fvlv| Avwg evsjvq †`wL ¯^cœ!");
+        assert_eq!(converter.convert("০১২৩৪৫৬৭৮৯৳।\u{0965}"), "0123456789$|\\");
+        assert_eq!(
+            converter.convert("বাংলা আমার ভাষা। আমি বাংলায় দেখি স্বপ্ন!"),
+            "evsjv Avgvi fvlv| Avwg evsjvq †`wL ¯^cœ!"
+        );
     }
 
     #[test]
@@ -595,6 +635,7 @@ mod tests {
         assert_eq!(converter.convert("কি"), "wK");
         assert_eq!(converter.convert("কীট"), "KxU");
         assert_eq!(converter.convert("কে"), "†K");
+        assert_eq!(converter.convert("স্পেক"), "†¯cK");
         assert_eq!(converter.convert("কৈ"), "ˆK");
         assert_eq!(converter.convert("কো"), "†Kv");
         assert_eq!(converter.convert("কৌ"), "†KŠ");
@@ -640,5 +681,17 @@ mod tests {
         let converter = Bijoy2000::new();
 
         assert_eq!(converter.convert("অর্ক"), "AK©");
+    }
+
+    #[test]
+    fn test_front_facing() {
+        assert!(is_front_facing(""));
+        assert!(is_front_facing("ক"));
+        assert!(is_front_facing("ক্ক ক"));
+        assert!(!is_front_facing("ক্ক কক্ক"));
+        assert!(!is_front_facing("কক"));
+        assert!(is_front_facing("স্প"));
+        assert!(is_front_facing("ম্প্র"));
+        assert!(!is_front_facing("কম্প্র"));
     }
 }
