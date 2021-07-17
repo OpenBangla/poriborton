@@ -351,6 +351,7 @@ impl Bijoy2000 {
             "ক্ত" => "³",
             "ক্ট" => "±",
             "ক্ক" => "°",
+            "র‍্য" => "i¨",
         ];
 
         Self { map }
@@ -415,6 +416,7 @@ impl Bijoy2000 {
                     self.convert_buffer(&mut buffer, &mut output);
                     output.push('\\');
                 }
+                ZWJ => buffer.push(ZWJ),
                 c if encountered_hasanta => {
                     buffer.push(c);
                     encountered_hasanta = false;
@@ -673,7 +675,7 @@ mod tests {
         assert_eq!(converter.convert("বিদ্যুৎ"), "we`¨yr");
         assert_eq!(converter.convert("কিন্তু"), "wKš‘");
         assert_eq!(converter.convert("আগন্তুক"), "AvMš‘K");
-        //assert_eq!(converter.convert("র‍্যাব"), "i¨ve");
+        assert_eq!(converter.convert("র‍্যাব"), "i¨ve");
     }
 
     #[test]
