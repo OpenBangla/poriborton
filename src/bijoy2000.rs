@@ -417,6 +417,14 @@ impl Bijoy2000 {
                     output.push('\\');
                 }
                 ZWJ => buffer.push(ZWJ),
+                ZWNJ => {
+                    if buffer.ends_with(B_HASANTA) {
+                        buffer.pop();
+                        self.convert_buffer(&mut buffer, &mut output);
+                        output.push('&'); // Hasanta
+                        encountered_hasanta = false; // Reset
+                    }
+                }
                 c if encountered_hasanta => {
                     buffer.push(c);
                     encountered_hasanta = false;
@@ -566,6 +574,10 @@ fn is_special_combination_with_l(string: Option<&str>) -> bool {
     )
 }
 
+fn is_vowel(c: char) -> bool {
+    matches!(c, B_A..=B_OU)
+}
+
 fn is_consonant(c: char) -> bool {
     matches!(c, B_K..=B_H)
 }
@@ -598,6 +610,10 @@ fn is_front_facing(string: &str) -> bool {
 
         if c.is_ascii_whitespace() {
             break;
+        }
+
+        if is_vowel(c) || is_kar(c) {
+            return false;
         }
     }
 
@@ -695,5 +711,6 @@ mod tests {
         assert!(is_front_facing("স্প"));
         assert!(is_front_facing("ম্প্র"));
         assert!(!is_front_facing("কম্প্র"));
+        assert!(!is_front_facing("আক্ক"));
     }
 }
