@@ -5,7 +5,7 @@ use matches::matches;
 
 use crate::chars::*;
 
-struct Bijoy2000 {
+pub struct Bijoy2000 {
     map: HashMap<&'static str, &'static str>,
 }
 
