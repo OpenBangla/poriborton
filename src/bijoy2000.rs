@@ -1,9 +1,10 @@
-use std::{collections::HashMap, ops::Deref};
+use std::collections::HashMap;
 
 use maplit::hashmap;
 use matches::matches;
 
 use crate::chars::*;
+use crate::utility::{is_base_line_right_char, is_front_facing, is_front_kar, is_kar, last};
 
 pub struct Bijoy2000 {
     map: HashMap<&'static str, &'static str>,
@@ -91,11 +92,13 @@ impl Bijoy2000 {
             "ষ্ট্র" => "óª",
             "ষ্ট্য" => "ó¨",
             "ষ্ক্র" => "®Œ",
+            "ষ্ক্ব" => "®‹¡",
             "ল্ক্য" => "é¨",
             "র্হ্য" => "n¨©",
             "র্ষ্য" => "l¨©",
             "র্শ্য" => "k¨©",
             "র্শ্ব" => "k¦©",
+            "শ্ল" => "k−",
             "র্ম্য" => "g¨©",
             "র্ব্য" => "e¨©",
             "র্ধ্ব" => "aŸ©",
@@ -165,6 +168,7 @@ impl Bijoy2000 {
             "হ্ব" => "nŸ",
             "হ্ন" => "ý",
             "হ্ণ" => "nœ",
+            "হ্ল" => "n¬",
             "স্ল" => "¯¬",
             "স্র" => "mª",
             "স্য" => "m¨",
@@ -172,6 +176,7 @@ impl Bijoy2000 {
             "স্ব" => "¯^",
             "স্ফ" => "ù",
             "স্প" => "¯c",
+            "স্প্ল" => "¯c−",
             "স্ন" => "ø",
             "স্থ" => "¯’",
             "স্ত" => "¯—",
@@ -184,6 +189,7 @@ impl Bijoy2000 {
             "ষ্ফ" => "õ",
             "ষ্প" => "®c",
             "ষ্ণ" => "ò",
+            "ষ্ণ্ব" => "ò¡",
             "ষ্ঠ" => "ô",
             "ষ্ট" => "ó",
             "ষ্ক" => "®‹",
@@ -195,6 +201,7 @@ impl Bijoy2000 {
             "শ্ছ" => "ñ",
             "শ্চ" => "ð",
             "ল্য" => "j¨",
+            "ল্ল" => "j−",
             "ল্ম" => "j¥",
             "ল্ব" => "j¡",
             "ল্প" => "í",
@@ -202,6 +209,8 @@ impl Bijoy2000 {
             "ল্ট" => "ë",
             "ল্গ" => "ê",
             "ল্ক" => "é",
+            "ল্ভ" => "j¢",
+            "ল্ফ" => "î",
             "র্হ" => "n©",
             "র্স" => "m©",
             "র্ষ" => "l©",
@@ -241,18 +250,21 @@ impl Bijoy2000 {
             "ভ্র" => "å",
             "ভ্য" => "f¨",
             "ভ্ব" => "f¡",
+            "ভ্ল" => "f¬",
             "ব্র" => "eª",
             "ব্য" => "e¨",
             "ব্ব" => "eŸ",
             "ব্ধ" => "ä",
             "ব্দ" => "ã",
             "ব্জ" => "â",
+            "ব্ল" => "e­",
             "ফ্ল" => "d¬",
             "ফ্র" => "d«",
             "প্স" => "á",
             "প্র" => "cÖ",
             "প্য" => "c¨",
             "প্প" => "à",
+            "প্ল" => "c­",
             "প্ন" => "cœ",
             "প্ত" => "ß",
             "প্ট" => "Þ",
@@ -260,6 +272,7 @@ impl Bijoy2000 {
             "ন্ম" => "b¥",
             "ন্ব" => "š^",
             "ন্ন" => "bœ",
+            "ন্হ" => "›n",
             "ন্ধ" => "Ü",
             "ন্দ" => "›`",
             "ন্থ" => "š’",
@@ -305,6 +318,9 @@ impl Bijoy2000 {
             "ড্য" => "W¨",
             "ড্ব" => "W¡",
             "ড্ড" => "Ç",
+            "ড্ম" => "W¥",
+            "ড্ব" => "W¡",
+            "ন্ড্ব" => "Û¡",
             "ট্র" => "Uª",
             "ট্য" => "U¨",
             "ট্ম" => "U¥",
@@ -338,12 +354,14 @@ impl Bijoy2000 {
             "গ্ম" => "M¥",
             "গ্ব" => "M¦",
             "গ্ন" => "Mœ",
+            "গ্ল" => "M−",
             "গ্ধ" => "»",
             "খ্র" => "Lª",
             "খ্য" => "L¨",
             "ক্স" => "·",
             "ক্ষ" => "¶",
             "ক্ল" => "K¬",
+            "ক্ন" => "Kè",
             "ক্র" => "µ",
             "ক্য" => "K¨",
             "ক্ম" => "´",
@@ -351,6 +369,7 @@ impl Bijoy2000 {
             "ক্ত" => "³",
             "ক্ট" => "±",
             "ক্ক" => "°",
+            "ড়্গ" => "ÿ",
             "র‍্য" => "i¨",
         ];
 
@@ -441,9 +460,7 @@ impl Bijoy2000 {
         }
 
         if !buffer.is_empty() {
-            if let Some(replace) = self.map.get(buffer.deref()) {
-                output.push_str(replace);
-            }
+            self.convert_buffer(&mut buffer, &mut output);
         }
 
         output
@@ -452,33 +469,37 @@ impl Bijoy2000 {
     /// Converts the `buffer` into Bijoy encoding and updates the `output`.
     /// Clears the `buffer` after the conversion.
     fn convert_buffer(&self, buffer: &mut String, output: &mut String) {
+        let mut reph = false;
+        let mut z_fola = false;
+        // Reph
+        if buffer.starts_with("র্") {
+            buffer.drain(..6);
+            reph = true;
+        }
+        // R + ZWJ + Hasanta
+        if buffer.starts_with("র\u{200D}") {
+            // Remove the ZWJ so the buffer will have just R only as we'll be removing Z fola next.
+            buffer.drain(3..6);
+        }
+        // Z fola
+        if buffer.ends_with("্য") {
+            buffer.truncate(buffer.len() - 6);
+            z_fola = true;
+        }
+
         if let Some(replace) = self.map.get(buffer.as_str()) {
             output.push_str(replace);
         }
         buffer.clear();
+
+        if z_fola {
+            output.push('¨');
+        }
+
+        if reph {
+            output.push('©');
+        }
     }
-}
-
-fn is_kar(c: char) -> bool {
-    matches!(c, B_AA_KAR..=B_OU_KAR)
-}
-
-fn is_front_kar(c: char) -> bool {
-    matches!(c, B_I_KAR | B_E_KAR | B_OI_KAR)
-}
-
-#[rustfmt::skip]
-fn is_base_line_right_char(c: &str) -> bool {
-    matches!(
-        c,
-        "খ" | "গ" | "ঘ" | "ন" | "ণ" | "থ" | "দ" | "ধ" | "প" | "ব" |
-        "ম" | "য" | "র" | "ল" | "শ" | "ষ" | "স" | "হ" | "য়"
-    )
-}
-
-/// Returns a substring that contains the `n` rightmost Bengali characters of the `string`.
-fn last(string: &str, n: usize) -> Option<&str> {
-    string.get(string.len().saturating_sub(n * 3)..)
 }
 
 fn replace_kar(kar: char, front: bool, preceding: &str) -> char {
@@ -574,52 +595,6 @@ fn is_special_combination_with_l(string: Option<&str>) -> bool {
     )
 }
 
-fn is_vowel(c: char) -> bool {
-    matches!(c, B_A..=B_OU)
-}
-
-fn is_consonant(c: char) -> bool {
-    matches!(c, B_K..=B_H)
-}
-
-fn is_front_facing(string: &str) -> bool {
-    // If it's an empty string, return true.
-    if string.is_empty() {
-        true;
-    }
-
-    // Check if it has a preceding Juktakkhor combination or single consonant.
-    let mut encountered_hasanta = false;
-    let mut encountered_consonant = false;
-
-    for c in string.chars().rev() {
-        if c == B_HASANTA {
-            encountered_hasanta = true;
-            continue;
-        }
-
-        if is_consonant(c) && encountered_consonant && !encountered_hasanta {
-            return false;
-        }
-
-        if is_consonant(c) {
-            encountered_consonant = true;
-            encountered_hasanta = false;
-            continue;
-        }
-
-        if c.is_ascii_whitespace() {
-            break;
-        }
-
-        if is_vowel(c) || is_kar(c) {
-            return false;
-        }
-    }
-
-    true
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -668,6 +643,7 @@ mod tests {
         assert_eq!(converter.convert("গু"), "¸");
         assert_eq!(converter.convert("শু"), "ï");
         assert_eq!(converter.convert("হু"), "û");
+        //TODO assert_eq!(converter.convert("ক্ষু"), "¶z");
         // UU Kar
         assert_eq!(converter.convert("রূ"), "iƒ");
         assert_eq!(converter.convert("ণূ"), "Y~");
@@ -699,18 +675,5 @@ mod tests {
         let converter = Bijoy2000::new();
 
         assert_eq!(converter.convert("অর্ক"), "AK©");
-    }
-
-    #[test]
-    fn test_front_facing() {
-        assert!(is_front_facing(""));
-        assert!(is_front_facing("ক"));
-        assert!(is_front_facing("ক্ক ক"));
-        assert!(!is_front_facing("ক্ক কক্ক"));
-        assert!(!is_front_facing("কক"));
-        assert!(is_front_facing("স্প"));
-        assert!(is_front_facing("ম্প্র"));
-        assert!(!is_front_facing("কম্প্র"));
-        assert!(!is_front_facing("আক্ক"));
     }
 }

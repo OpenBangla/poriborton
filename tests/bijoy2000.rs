@@ -22,7 +22,7 @@ fn test_2() {
 fn test_3() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ক্ট্র"), "±ª");
-    assert_eq!(converter.convert("অক্ট্রয়"), "A±ªq");
+    assert_eq!(converter.convert("অক্ট্রয়"), "A±ªq");
 }
 
 #[test]
@@ -192,14 +192,14 @@ fn test_26() {
     assert_eq!(converter.convert("গ্ন্য"), "Mœ¨");
     assert_eq!(converter.convert("অগ্ন্যাস্ত্র"), "AMœ¨v¯¿");
     assert_eq!(converter.convert("অগ্ন্যুৎপাত"), "AMœ¨yrcvZ");
-    assert_eq!(converter.convert("অগ্ন্যাশয়"), "AMœ¨vkq");
+    assert_eq!(converter.convert("অগ্ন্যাশয়"), "AMœ¨vkq");
 }
 
 #[test]
 fn test_27() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("গ্ব"), "M¦");
-    assert_eq!(converter.convert("দিগ্বিজয়ী"), "w`wM¦Rqx");
+    assert_eq!(converter.convert("দিগ্বিজয়ী"), "w`wM¦Rqx");
 }
 
 #[test]
@@ -226,17 +226,17 @@ fn test_30() {
 #[test]
 fn test_31() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("গ্র্য"), "M¨©");
-    assert_eq!(converter.convert("ঐকাগ্র্য"), "HKvM¨©");
-    assert_eq!(converter.convert("সামগ্র্য"), "mvgM¨©");
-    assert_eq!(converter.convert("গ্র্যাজুয়েট"), "M¨©vRy‡qU");
+    assert_eq!(converter.convert("গ্র্য"), "MÖ¨");
+    assert_eq!(converter.convert("ঐকাগ্র্য"), "HKvMÖ¨");
+    assert_eq!(converter.convert("সামগ্র্য"), "mvgMÖ¨");
+    assert_eq!(converter.convert("গ্র্যাজুয়েট"), "MÖ¨vRz‡qU");
 }
 
 #[test]
 fn test_32() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("গ্ল"), "M­");
-    assert_eq!(converter.convert("গ্লানি"), "M­vwb");
+    assert_eq!(converter.convert("গ্ল"), "M−");
+    assert_eq!(converter.convert("গ্লানি"), "M−vwb");
 }
 
 #[test]
@@ -251,7 +251,7 @@ fn test_33() {
 fn test_34() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ঘ্য"), "N¨");
-    assert_eq!(converter.convert("অশ্লাঘ্য"), "Ak­vN¨");
+    assert_eq!(converter.convert("অশ্লাঘ্য"), "Ak−vN¨");
 }
 
 #[test]
@@ -274,7 +274,7 @@ fn test_36() {
 fn test_37() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ঙ্‌ক্ত"), "O&³");
-    assert_eq!(converter.convert("পঙ্‌ক্তি"), "cwO&³");
+    assert_eq!(converter.convert("পঙ্‌ক্তি"), "cO&w³");
 }
 
 #[test]
@@ -346,7 +346,7 @@ fn test_46() {
 fn test_47() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ঙ্ম"), "•g");
-    assert_eq!(converter.convert("বাঙ্ময়"), "ev•gq");
+    assert_eq!(converter.convert("বাঙ্ময়"), "ev•gq");
 }
 
 #[test]
@@ -374,7 +374,7 @@ fn test_50() {
 fn test_51() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("চ্ছ্র"), "”Qª");
-    assert_eq!(converter.convert("উচ্ছ্রায়"), "D”Qªvq");
+    assert_eq!(converter.convert("উচ্ছ্রায়"), "D”Qªvq");
 }
 
 #[test]
@@ -453,7 +453,7 @@ fn test_62() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ঞ্চ"), "Â");
     assert_eq!(converter.convert("অঞ্চল"), "AÂj");
-    assert_eq!(converter.convert("সঞ্চয়"), "mÂq");
+    assert_eq!(converter.convert("সঞ্চয়"), "mÂq");
 }
 
 #[test]
@@ -520,7 +520,7 @@ fn test_71() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ড্ড"), "Ç");
     assert_eq!(converter.convert("আড্ডা"), "AvÇv");
-    assert_eq!(converter.convert("উড্ডয়ন"), "DÇqb");
+    assert_eq!(converter.convert("উড্ডয়ন"), "DÇqb");
 }
 
 #[test]
@@ -555,8 +555,8 @@ fn test_75() {
 #[test]
 fn test_76() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ড়্গ"), "ÿ");
-    assert_eq!(converter.convert("খড়্‌গ"), "Lo&M");
+    assert_eq!(converter.convert("ড়্গ"), "ÿ");
+    assert_eq!(converter.convert("খড়্গ"), "Lÿ");
 }
 
 #[test]
@@ -642,8 +642,8 @@ fn test_87() {
 fn test_88() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ণ্ম"), "Y¥");
-    assert_eq!(converter.convert("চিণ্ময়"), "wPY¥q");
-    assert_eq!(converter.convert("মৃণ্ময়ী"), "g„Y¥qx");
+    assert_eq!(converter.convert("চিণ্ময়"), "wPY¥q");
+    assert_eq!(converter.convert("মৃণ্ময়ী"), "g„Y¥qx");
 }
 
 #[test]
@@ -749,8 +749,8 @@ fn test_102() {
 #[test]
 fn test_103() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ত্র্য"), "Z¨©");
-    assert_eq!(converter.convert("বৈচিত্র্য"), "ˆewPZ¨©");
+    assert_eq!(converter.convert("ত্র্য"), "Î¨");
+    assert_eq!(converter.convert("বৈচিত্র্য"), "ˆewPÎ¨");
 }
 
 #[test]
@@ -873,8 +873,8 @@ fn test_119() {
 #[test]
 fn test_120() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("দ্র্য"), "`¨©");
-    assert_eq!(converter.convert("দারিদ্র্য"), "`vwi`¨©");
+    assert_eq!(converter.convert("দ্র্য"), "`ª¨");
+    assert_eq!(converter.convert("দারিদ্র্য"), "`vwi`ª¨");
 }
 
 #[test]
@@ -981,8 +981,8 @@ fn test_134() {
 #[test]
 fn test_135() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ন্ত্র্য"), "š—¨©");
-    assert_eq!(converter.convert("স্বাতন্ত্র্য"), "¯^vZš—¨©");
+    assert_eq!(converter.convert("ন্ত্র্য"), "š¿¨");
+    assert_eq!(converter.convert("স্বাতন্ত্র্য"), "¯^vZš¿¨");
 }
 
 #[test]
@@ -1067,7 +1067,7 @@ fn test_146() {
 fn test_147() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ন্ম"), "b¥");
-    assert_eq!(converter.convert("চিন্ময়"), "wPb¥q");
+    assert_eq!(converter.convert("চিন্ময়"), "wPb¥q");
 }
 
 #[test]
@@ -1124,8 +1124,8 @@ fn test_154() {
 #[test]
 fn test_155() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("প্র্য"), "c¨©");
-    assert_eq!(converter.convert("প্র্যাকটিস"), "c¨©vKwUm");
+    assert_eq!(converter.convert("প্র্য"), "cÖ¨");
+    assert_eq!(converter.convert("প্র্যাকটিস"), "cÖ¨vKwUm");
 }
 
 #[test]
@@ -1399,7 +1399,7 @@ fn test_192() {
 fn test_193() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("র্জ্ঞ"), "Á©");
-    assert_eq!(converter.convert("দুর্জ্ঞেয়"), "`y‡Á©q");
+    assert_eq!(converter.convert("দুর্জ্ঞেয়"), "`y‡Á©q");
 }
 
 #[test]
@@ -1529,7 +1529,7 @@ fn test_210() {
     assert_eq!(converter.convert("সার্টিফিকেট"), "mvwU©wd‡KU");
     assert_eq!(converter.convert("কনসার্ট"), "KbmvU©");
     assert_eq!(converter.convert("কার্টুন"), "KvU©zb");
-    assert_eq!(converter.convert("কোয়ার্টার"), "†KvqvU©vi");
+    assert_eq!(converter.convert("কোয়ার্টার"), "†KvqvU©vi");
 }
 
 #[test]
@@ -1581,7 +1581,7 @@ fn test_216() {
 fn test_217() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("র্দ"), "`©");
-    assert_eq!(converter.convert("নির্দয়"), "wb`©q");
+    assert_eq!(converter.convert("নির্দয়"), "wb`©q");
 }
 
 #[test]
@@ -1823,8 +1823,8 @@ fn test_250() {
 #[test]
 fn test_251() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ল্ল"), "j­");
-    assert_eq!(converter.convert("উল্লাস"), "Dj­vm");
+    assert_eq!(converter.convert("ল্ল"), "j−");
+    assert_eq!(converter.convert("উল্লাস"), "Dj−vm");
 }
 
 #[test]
@@ -1880,9 +1880,9 @@ fn test_258() {
 #[test]
 fn test_259() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("শ্ল"), "k­");
-    assert_eq!(converter.convert("অশ্লীল"), "Ak­xj");
-    assert_eq!(converter.convert("শ্লোক"), "†k­vK");
+    assert_eq!(converter.convert("শ্ল"), "k−");
+    assert_eq!(converter.convert("অশ্লীল"), "Ak−xj");
+    assert_eq!(converter.convert("শ্লোক"), "†k−vK");
 }
 
 #[test]
@@ -1903,7 +1903,7 @@ fn test_261() {
 fn test_262() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ষ্ক্র"), "®Œ");
-    assert_eq!(converter.convert("নিষ্ক্রিয়"), "wbw®Œq");
+    assert_eq!(converter.convert("নিষ্ক্রিয়"), "wbw®Œq");
 }
 
 #[test]
@@ -1966,7 +1966,7 @@ fn test_270() {
 fn test_271() {
     let converter = Bijoy2000::new();
     assert_eq!(converter.convert("ষ্প্র"), "®cÖ");
-    assert_eq!(converter.convert("নিষ্প্রয়োজন"), "wb®cÖ‡qvRb");
+    assert_eq!(converter.convert("নিষ্প্রয়োজন"), "wb®cÖ‡qvRb");
 }
 
 #[test]
@@ -2105,8 +2105,8 @@ fn test_290() {
 #[test]
 fn test_291() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("স্প্ল"), "¯c­");
-    assert_eq!(converter.convert("স্প্লিন"), "w¯c­b");
+    assert_eq!(converter.convert("স্প্ল"), "¯c−");
+    assert_eq!(converter.convert("স্প্লিন"), "w¯c−b");
 }
 
 #[test]
@@ -2197,7 +2197,7 @@ fn test_303() {
 #[test]
 fn test_304() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("হ্ল"), "n­");
-    assert_eq!(converter.convert("আহ্লাদ"), "Avn­v`");
-    assert_eq!(converter.convert("প্রহ্লাদ"), "cÖn­v`");
+    assert_eq!(converter.convert("হ্ল"), "n¬");
+    assert_eq!(converter.convert("আহ্লাদ"), "Avn¬v`");
+    assert_eq!(converter.convert("প্রহ্লাদ"), "cÖn¬v`");
 }
