@@ -92,12 +92,13 @@ impl Bijoy2000 {
             "ষ্ট্র" => "óª",
             "ষ্ট্য" => "ó¨",
             "ষ্ক্র" => "®Œ",
+            "ষ্ক্ব" => "®‹¡",
             "ল্ক্য" => "é¨",
             "র্হ্য" => "n¨©",
             "র্ষ্য" => "l¨©",
             "র্শ্য" => "k¨©",
             "র্শ্ব" => "k¦©",
-            //"শ্ল" => "",
+            "শ্ল" => "k−",
             "র্ম্য" => "g¨©",
             "র্ব্য" => "e¨©",
             "র্ধ্ব" => "aŸ©",
@@ -167,6 +168,7 @@ impl Bijoy2000 {
             "হ্ব" => "nŸ",
             "হ্ন" => "ý",
             "হ্ণ" => "nœ",
+            "হ্ল" => "n¬",
             "স্ল" => "¯¬",
             "স্র" => "mª",
             "স্য" => "m¨",
@@ -174,6 +176,7 @@ impl Bijoy2000 {
             "স্ব" => "¯^",
             "স্ফ" => "ù",
             "স্প" => "¯c",
+            "স্প্ল" => "¯c−",
             "স্ন" => "ø",
             "স্থ" => "¯’",
             "স্ত" => "¯—",
@@ -186,6 +189,7 @@ impl Bijoy2000 {
             "ষ্ফ" => "õ",
             "ষ্প" => "®c",
             "ষ্ণ" => "ò",
+            "ষ্ণ্ব" => "ò¡",
             "ষ্ঠ" => "ô",
             "ষ্ট" => "ó",
             "ষ্ক" => "®‹",
@@ -197,6 +201,7 @@ impl Bijoy2000 {
             "শ্ছ" => "ñ",
             "শ্চ" => "ð",
             "ল্য" => "j¨",
+            "ল্ল" => "j−",
             "ল্ম" => "j¥",
             "ল্ব" => "j¡",
             "ল্প" => "í",
@@ -204,6 +209,8 @@ impl Bijoy2000 {
             "ল্ট" => "ë",
             "ল্গ" => "ê",
             "ল্ক" => "é",
+            "ল্ভ" => "j¢",
+            "ল্ফ" => "î",
             "র্হ" => "n©",
             "র্স" => "m©",
             "র্ষ" => "l©",
@@ -243,18 +250,21 @@ impl Bijoy2000 {
             "ভ্র" => "å",
             "ভ্য" => "f¨",
             "ভ্ব" => "f¡",
+            "ভ্ল" => "f¬",
             "ব্র" => "eª",
             "ব্য" => "e¨",
             "ব্ব" => "eŸ",
             "ব্ধ" => "ä",
             "ব্দ" => "ã",
             "ব্জ" => "â",
+            "ব্ল" => "e­",
             "ফ্ল" => "d¬",
             "ফ্র" => "d«",
             "প্স" => "á",
             "প্র" => "cÖ",
             "প্য" => "c¨",
             "প্প" => "à",
+            "প্ল" => "c­",
             "প্ন" => "cœ",
             "প্ত" => "ß",
             "প্ট" => "Þ",
@@ -262,6 +272,7 @@ impl Bijoy2000 {
             "ন্ম" => "b¥",
             "ন্ব" => "š^",
             "ন্ন" => "bœ",
+            "ন্হ" => "›n",
             "ন্ধ" => "Ü",
             "ন্দ" => "›`",
             "ন্থ" => "š’",
@@ -343,6 +354,7 @@ impl Bijoy2000 {
             "গ্ম" => "M¥",
             "গ্ব" => "M¦",
             "গ্ন" => "Mœ",
+            "গ্ল" => "M−",
             "গ্ধ" => "»",
             "খ্র" => "Lª",
             "খ্য" => "L¨",
@@ -457,13 +469,19 @@ impl Bijoy2000 {
     /// Converts the `buffer` into Bijoy encoding and updates the `output`.
     /// Clears the `buffer` after the conversion.
     fn convert_buffer(&self, buffer: &mut String, output: &mut String) {
+        let mut reph = false;
         let mut z_fola = false;
-        // ZWJ + Z fola
-        if buffer.ends_with("\u{200D}্য") {
-            buffer.truncate(buffer.len() - 9);
-            z_fola = true;
+        // Reph
+        if buffer.starts_with("র্") {
+            buffer.drain(..6);
+            reph = true;
         }
-
+        // R + ZWJ + Hasanta
+        if buffer.starts_with("র\u{200D}") {
+            // Remove the ZWJ so the buffer will have just R only as we'll be removing Z fola next.
+            buffer.drain(3..6);
+        }
+        // Z fola
         if buffer.ends_with("্য") {
             buffer.truncate(buffer.len() - 6);
             z_fola = true;
@@ -476,6 +494,10 @@ impl Bijoy2000 {
 
         if z_fola {
             output.push('¨');
+        }
+
+        if reph {
+            output.push('©');
         }
     }
 }
@@ -621,6 +643,7 @@ mod tests {
         assert_eq!(converter.convert("গু"), "¸");
         assert_eq!(converter.convert("শু"), "ï");
         assert_eq!(converter.convert("হু"), "û");
+        //TODO assert_eq!(converter.convert("ক্ষু"), "¶z");
         // UU Kar
         assert_eq!(converter.convert("রূ"), "iƒ");
         assert_eq!(converter.convert("ণূ"), "Y~");
