@@ -749,8 +749,8 @@ fn test_102() {
 #[test]
 fn test_103() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ত্র্য"), "Z¨©");
-    assert_eq!(converter.convert("বৈচিত্র্য"), "ˆewPZ¨©");
+    assert_eq!(converter.convert("ত্র্য"), "Î¨");
+    assert_eq!(converter.convert("বৈচিত্র্য"), "ˆewPÎ¨");
 }
 
 #[test]
@@ -873,8 +873,8 @@ fn test_119() {
 #[test]
 fn test_120() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("দ্র্য"), "`¨©");
-    assert_eq!(converter.convert("দারিদ্র্য"), "`vwi`¨©");
+    assert_eq!(converter.convert("দ্র্য"), "`ª¨");
+    assert_eq!(converter.convert("দারিদ্র্য"), "`vwi`ª¨");
 }
 
 #[test]
@@ -981,8 +981,8 @@ fn test_134() {
 #[test]
 fn test_135() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("ন্ত্র্য"), "š—¨©");
-    assert_eq!(converter.convert("স্বাতন্ত্র্য"), "¯^vZš—¨©");
+    assert_eq!(converter.convert("ন্ত্র্য"), "š¿¨");
+    assert_eq!(converter.convert("স্বাতন্ত্র্য"), "¯^vZš¿¨");
 }
 
 #[test]
@@ -1124,8 +1124,8 @@ fn test_154() {
 #[test]
 fn test_155() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("প্র্য"), "c¨©");
-    assert_eq!(converter.convert("প্র্যাকটিস"), "c¨©vKwUm");
+    assert_eq!(converter.convert("প্র্য"), "cÖ¨");
+    assert_eq!(converter.convert("প্র্যাকটিস"), "cÖ¨vKwUm");
 }
 
 #[test]
@@ -1731,8 +1731,9 @@ fn test_237() {
 #[test]
 fn test_238() {
     let converter = Bijoy2000::new();
-    assert_eq!(converter.convert("র্হ্য"), "n¨©");
-    assert_eq!(converter.convert("গর্হ্য"), "Mn¨©");
+    // These two conversions deviate from Avro implementation.
+    assert_eq!(converter.convert("র্হ্য"), "n©¨");
+    assert_eq!(converter.convert("গর্হ্য"), "Mn©¨");
 }
 
 #[test]
