@@ -534,6 +534,13 @@ fn replace_kar(kar: char, front: bool, preceding: &str) -> char {
                     'y'
                 }
             }
+            Some("ষ") => {
+                if matches!(last(preceding, 3), Some("ক্ষ")) {
+                    'z'
+                } else {
+                    'y'
+                }
+            }
             Some(c) if is_base_line_right_char(c) => 'y',
             Some("ড়") | Some("ঢ়") => '–',
             _ => 'z',
@@ -555,6 +562,13 @@ fn replace_kar(kar: char, front: bool, preceding: &str) -> char {
                     || matches!(last(preceding, 5), Some("স্প্ল"))
                 {
                     'ƒ'
+                } else {
+                    '~'
+                }
+            }
+            Some("ষ") => {
+                if matches!(last(preceding, 3), Some("ক্ষ")) {
+                    '‚'
                 } else {
                     '~'
                 }
@@ -643,11 +657,14 @@ mod tests {
         assert_eq!(converter.convert("গু"), "¸");
         assert_eq!(converter.convert("শু"), "ï");
         assert_eq!(converter.convert("হু"), "û");
-        //TODO assert_eq!(converter.convert("ক্ষু"), "¶z");
+        assert_eq!(converter.convert("ষু"), "ly");
+        assert_eq!(converter.convert("ক্ষু"), "¶z");
         // UU Kar
         assert_eq!(converter.convert("রূ"), "iƒ");
         assert_eq!(converter.convert("ণূ"), "Y~");
         assert_eq!(converter.convert("কূ"), "K‚");
+        assert_eq!(converter.convert("ষূ"), "l~");
+        assert_eq!(converter.convert("ক্ষূ"), "¶‚");
         // RRI Kar
         assert_eq!(converter.convert("হৃ"), "ü");
         assert_eq!(converter.convert("রৃ"), "i„");
