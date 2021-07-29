@@ -78,8 +78,6 @@ impl Bijoy2000 {
             // Juktaokkhors
             "ন্ত্র্য" => "š—¨©",
             "ক্ষ্ম্য" => "²¨",
-            "স্প্‌ল" => "¯c&j",
-            "ঙ্‌ক্ত" => "O&³",
             "স্প্র" => "¯cÖ",
             "স্থ্য" => "¯’¨",
             "স্ত্র" => "¯¿",
@@ -159,9 +157,6 @@ impl Bijoy2000 {
             "ক্ষ্ণ" => "¶è",
             "ক্ত্র" => "³«",
             "ক্ট্র" => "±ª",
-            "ল্‌ভ" => "j&f",
-            "ল্‌ফ" => "j&d",
-            "গ্‌ণ" => "M&Y",
             "হ্র" => "nª",
             "হ্য" => "n¨",
             "হ্ম" => "þ",
@@ -622,6 +617,7 @@ mod tests {
         assert_eq!(converter.convert("সুতরাং"), "myZivs");
         assert_eq!(converter.convert("চাঁদ"), "Pvu`");
         assert_eq!(converter.convert("দুঃখ"), "`ytL");
+        assert_eq!(converter.convert("অর্ক"), "AK©");
         assert_eq!(
             converter.convert("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"),
             "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
@@ -688,9 +684,13 @@ mod tests {
     }
 
     #[test]
-    fn test_reph() {
+    fn test_zwnj() {
         let converter = Bijoy2000::new();
 
-        assert_eq!(converter.convert("অর্ক"), "AK©");
+        assert_eq!(converter.convert("স্প্‌ল"), "¯c&j");
+        assert_eq!(converter.convert("ঙ্‌ক্ত"), "O&³");
+        assert_eq!(converter.convert("ল্‌ভ"), "j&f");
+        assert_eq!(converter.convert("ল্‌ফ"), "j&d");
+        assert_eq!(converter.convert("গ্‌ণ"), "M&Y");
     }
 }
