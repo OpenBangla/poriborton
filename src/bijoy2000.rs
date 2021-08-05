@@ -370,6 +370,7 @@ impl Bijoy2000 {
     fn convert_buffer(&self, buffer: &mut String, output: &mut String) {
         let mut reph = false;
         let mut z_fola = false;
+        let mut hasanta = false;
         // Reph
         if buffer.starts_with("র্") {
             buffer.drain(..6);
@@ -385,6 +386,11 @@ impl Bijoy2000 {
             buffer.truncate(buffer.len() - 6);
             z_fola = true;
         }
+        // Non Juktokkhor making trailing Hasanta
+        if buffer.ends_with('্') {
+            buffer.pop();
+            hasanta = true;
+        }
 
         if let Some(replace) = self.map.get(buffer.as_str()) {
             output.push_str(replace);
@@ -397,6 +403,10 @@ impl Bijoy2000 {
 
         if reph {
             output.push('©');
+        }
+
+        if hasanta {
+            output.push('&');
         }
     }
 }
@@ -597,5 +607,14 @@ mod tests {
         assert_eq!(converter.convert("ল্‌ভ"), "j&f");
         assert_eq!(converter.convert("ল্‌ফ"), "j&d");
         assert_eq!(converter.convert("গ্‌ণ"), "M&Y");
+    }
+
+    #[test]
+    fn test_hasanta() {
+        let converter = Bijoy2000::new();
+
+        assert_eq!(converter.convert("্"), "&");
+        assert_eq!(converter.convert("ক্"), "K&");
+        assert_eq!(converter.convert("কক্ষ্"), "K¶&");
     }
 }
