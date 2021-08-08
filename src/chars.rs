@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 /* The Unicode Standard 8.0
  * http://www.unicode.org/charts/
  * http://www.unicode.org/charts/PDF/U0980.pdf

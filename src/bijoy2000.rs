@@ -1,3 +1,5 @@
+//! Unicode to Bijoy 2000 encoding conversion.
+
 use std::collections::HashMap;
 
 use maplit::hashmap;
@@ -6,11 +8,22 @@ use matches::matches;
 use crate::chars::*;
 use crate::utility::{is_base_line_right_char, is_front_facing, is_front_kar, is_kar, last};
 
+/// Unicode to Bijoy 2000 encoding converter.
+///
+/// # Example
+/// ```
+/// # use poriborton::bijoy2000::Bijoy2000;
+/// # fn main() {
+/// let converter = Bijoy2000::new();
+/// 
+/// assert_eq!(converter.convert("বিজয় ২০০০"), "weRq 2000");
+/// # }
 pub struct Bijoy2000 {
     map: HashMap<&'static str, &'static str>,
 }
 
 impl Bijoy2000 {
+    /// Creates a new instance.
     pub fn new() -> Self {
         let map = hashmap! [
             "০" => "0",
@@ -275,6 +288,7 @@ impl Bijoy2000 {
         Self { map }
     }
 
+    /// Convert Unicode `input` text to Bijoy 2000 encoding.
     pub fn convert(&self, input: &str) -> String {
         let mut output = String::new();
         let mut buffer = String::new();
