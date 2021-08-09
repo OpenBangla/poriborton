@@ -9,12 +9,11 @@ A Rust crate for interconversion between Unicode and various Bengali ANSI encodi
 
 ## Example
 ```rust
-use poriborton::bijoy2000::Bijoy2000;
+use poriborton::bijoy2000::unicode_to_bijoy;
 
 fn main() {
     // Converts Unicode to Bijoy2000 encoding.
-    let converter = Bijoy2000::new();
-
-    assert_eq!(converter.convert("আমি বাংলায় গান গাই"), "Avwg evsjvq Mvb MvB");
+    
+    assert_eq!(unicode_to_bijoy("আমি বাংলায় গান গাই"), "Avwg evsjvq Mvb MvB");
 }
 ```
