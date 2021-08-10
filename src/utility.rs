@@ -1,3 +1,5 @@
+use matches::matches;
+
 use crate::chars::*;
 
 /// Returns a substring that contains the `n` rightmost Bengali characters of the `string`.
