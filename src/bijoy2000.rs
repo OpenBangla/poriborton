@@ -91,6 +91,7 @@ static MAP: phf::Map<&'static str, &'static str> = phf_map![
     "ন্ত্ব" => "š—¡",
     "ন্ড্র" => "Ûª",
     "ন্ট্র" => "›Uª",
+    "ন্স" => "Ý",
     "দ্ভ্র" => "™£",
     "দ্দ্ব" => "Ï¡",
     "ত্ত্র" => "Ë«",
@@ -588,6 +589,7 @@ mod tests {
         assert_eq!(unicode_to_bijoy("কিন্তু"), "wKš‘");
         assert_eq!(unicode_to_bijoy("আগন্তুক"), "AvMš‘K");
         assert_eq!(unicode_to_bijoy("র‍্যাব"), "i¨ve");
+        assert_eq!(unicode_to_bijoy("ফিনান্সিয়াল"), "wdbvwÝqvj");
     }
 
     #[test]
