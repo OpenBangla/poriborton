@@ -22,6 +22,12 @@ static MAP: phf::Map<&'static str, &'static str> = phf_map![
     "ং" => "s",
     "ঃ" => "t",
     "৳" => "$",
+    // Quotation marks (in the range U+2018..=U+201D)
+    "“" => "Ò",
+    "”" => "Ó",
+    "‘" => "Ô",
+    "’" => "Õ",
+    // Vowels and Consonants
     "অ" => "A",
     "আ" => "Av",
     "ই" => "B",
@@ -347,7 +353,8 @@ pub fn unicode_to_bijoy(input: &str) -> String {
                 buffer.push(c);
                 encountered_hasanta = false;
             }
-            c @ '\u{0980}'..='\u{09FF}' => {
+            // Bengali characters and curly quotation marks
+            '\u{0980}'..='\u{09FF}' | '\u{2018}' | '\u{2019}' | '\u{201C}' | '\u{201D}' => {
                 convert_buffer(&mut buffer, &mut output);
                 buffer.push(c);
             }
@@ -523,12 +530,13 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn test_without_juktakkhor() {
+    fn test_various() {
         assert_eq!(unicode_to_bijoy("কতল"), "KZj");
         assert_eq!(unicode_to_bijoy("সুতরাং"), "myZivs");
         assert_eq!(unicode_to_bijoy("চাঁদ"), "Pvu`");
         assert_eq!(unicode_to_bijoy("দুঃখ"), "`ytL");
         assert_eq!(unicode_to_bijoy("অর্ক"), "AK©");
+        assert_eq!(unicode_to_bijoy("কিংকর্তব্যবিমূঢ়"), "wKsKZ©e¨weg~p");
         assert_eq!(
             unicode_to_bijoy("ংঃঅআইঈউঊঋএঐওঔকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহঢ়ড়য়য"),
             "stAAvBCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnpoqh"
@@ -538,6 +546,9 @@ mod tests {
             unicode_to_bijoy("বাংলা আমার ভাষা। আমি বাংলায় দেখি স্বপ্ন!"),
             "evsjv Avgvi fvlv| Avwg evsjvq †`wL ¯^cœ!"
         );
+        assert_eq!(unicode_to_bijoy("\"'/{}();:![]\\"), "\"'/{}();:![]\\");
+        assert_eq!(unicode_to_bijoy("“আজো তার ফুলকলিদের ঘুম টুটেনি, তন্দ্রাতে বিলোল”"), "ÒAv‡Rv Zvi dzjKwj‡`i Nyg Uz‡Uwb, Z›`ªv‡Z we‡jvjÓ");
+        assert_eq!(unicode_to_bijoy("‘আসেনি দখিন হাওয়া গজল গাওয়া মৌমাছি বিভোল’"), "ÔAv‡mwb `wLb nvIqv MRj MvIqv †gŠgvwQ we‡fvjÕ");
     }
 
     #[test]

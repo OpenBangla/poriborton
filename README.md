@@ -1,6 +1,6 @@
 # poriborton (পরিবর্তন)
-![crates.io](https://img.shields.io/crates/v/poriborton.svg)
-![docs.rs](https://docs.rs/poriborton/badge.svg)
+[![crates.io](https://img.shields.io/crates/v/poriborton.svg)](https://crates.io/crates/poriborton)
+[![docs.rs](https://docs.rs/poriborton/badge.svg)](https://docs.rs/poriborton/latest/poriborton)
 
 A Rust crate for interconversion between Unicode and various Bengali ANSI encodings (precisely [Windows-1252](https://en.m.wikipedia.org/wiki/Windows-1252)).
 

@@ -1,6 +1,6 @@
 [package]
 name = "poriborton"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Muhammad Mominul Huque <mominul2082@gmail.com>"]
 description = "Interconversion between Unicode and various Bengali ANSI encodings."
 license = "MIT"
@@ -14,7 +14,7 @@ exclude = ["/data"]
 
 [dependencies]
 matches = "0.1"
-phf = { version = "0.9", features = ["macros"] }
+phf = { version = "0.10", features = ["macros"] }
 
 [dev-dependencies]
-pretty_assertions = "0.7"
+pretty_assertions = "1.2"
