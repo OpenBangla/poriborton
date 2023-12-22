@@ -1,6 +1,6 @@
 [package]
 name = "poriborton"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Muhammad Mominul Huque <mominul2082@gmail.com>"]
 description = "Interconversion between Unicode and various Bengali ANSI encodings."
 license = "MIT"
