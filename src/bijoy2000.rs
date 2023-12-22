@@ -1,6 +1,4 @@
 //! Unicode to Bijoy 2000 encoding conversion.
-
-use matches::matches;
 use phf::phf_map;
 
 use crate::chars::*;

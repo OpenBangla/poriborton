@@ -1,5 +1,3 @@
-use matches::matches;
-
 use crate::chars::*;
 
 /// Returns a substring that contains the `n` rightmost Bengali characters of the `string`.
@@ -35,7 +33,7 @@ pub(crate) fn is_consonant(c: char) -> bool {
 pub(crate) fn is_front_facing(string: &str) -> bool {
     // If it's an empty string, return true.
     if string.is_empty() {
-        true;
+        return true;
     }
 
     // Check if it has a preceding Juktakkhor combination or single consonant.

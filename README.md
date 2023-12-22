@@ -1,6 +1,8 @@
 # poriborton (পরিবর্তন)
+[![Build Status](https://github.com/OpenBangla/poriborton/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/OpenBangla/poriborton/actions?query=branch%3Amain)
 [![crates.io](https://img.shields.io/crates/v/poriborton.svg)](https://crates.io/crates/poriborton)
 [![docs.rs](https://docs.rs/poriborton/badge.svg)](https://docs.rs/poriborton/latest/poriborton)
+[![Rust](https://img.shields.io/badge/rust-1.63.0%2B-blue.svg?maxAge=3600)](https://github.com/OpenBangla/riti)
 
 A Rust crate for interconversion between Unicode and various Bengali ANSI encodings (precisely [Windows-1252](https://en.m.wikipedia.org/wiki/Windows-1252)).
 
