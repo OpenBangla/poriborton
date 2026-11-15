@@ -1,7 +1,7 @@
 #![allow(dead_code)]
-/* The Unicode Standard 8.0
- * http://www.unicode.org/charts/
- * http://www.unicode.org/charts/PDF/U0980.pdf
+/* The Unicode Standard 17.0.0
+ * https://www.unicode.org/versions/Unicode17.0.0/
+ * https://www.unicode.org/Public/17.0.0/charts/PDF/U0980.pdf
  */
 
 /***************************************************************
@@ -60,7 +60,7 @@ pub(crate) const B_PH: char = '\u{09AB}';
 pub(crate) const B_B: char = '\u{09AC}';
 pub(crate) const B_BH: char = '\u{09AD}';
 pub(crate) const B_M: char = '\u{09AE}';
-pub(crate) const B_Z: char = '\u{09AF}';
+pub(crate) const B_Z: char = '\u{09AF}'; // BENGALI LETTER YA
 pub(crate) const B_R: char = '\u{09B0}';
 pub(crate) const B_L: char = '\u{09B2}';
 pub(crate) const B_SH: char = '\u{09B6}';
@@ -148,7 +148,12 @@ pub(crate) const B_CURRENCYNUMERATOR_SIXTEEN: char = '\u{09F9}';
 pub(crate) const B_SIGN_ISSHAR: char = '\u{09FA}';
 
 /* Historic currency sign */
-pub(crate) const B_CURRENCYGANDA: char = '\u{09FB}';
+pub(crate) const B_CURRENCYGANDA: char = '\u{09FB}'; // BENGALI GANDA MARK
+
+/* Signs */
+pub(crate) const B_VEDIC_ANUSVARA: char = '\u{09FC}'; // BENGALI LETTER VEDIC ANUSVARA
+pub(crate) const B_ABBREVIATION_SIGN: char = '\u{09FD}'; // BENGALI ABBREVIATION SIGN
+pub(crate) const B_SANDHI_MARK: char = '\u{09FE}'; // BENGALI SANDHI MARK
 
 /* Unicode Addition */
 pub(crate) const ZWJ: char = '\u{200D}';
